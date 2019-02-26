@@ -6,12 +6,12 @@
     "start": "node ./bg-task.js"
   },
   "dependencies": {
+    "archiver": "^3.0.0",
     "bull": "^3.6.0",
     "download-file": "^0.1.5",
     "ioredis": "^4.5.1",
     "mkdirp": "^0.5.1",
     "node-cron": "^2.0.3",
-    "node-uuid": "^1.4.8",
     "node-zip": "^1.1.1",
     "ok.ru": "^1.2.0",
     "request": "^2.88.0",
