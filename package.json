@@ -1,0 +1,22 @@
+{
+  "name": "ok-photos",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./bg-task.js"
+  },
+  "dependencies": {
+    "bull": "^3.6.0",
+    "ioredis": "^4.5.1",
+    "mkdirp": "^0.5.1",
+    "node-cron": "^2.0.3",
+    "node-uuid": "^1.4.8",
+    "node-zip": "^1.1.1",
+    "ok.ru": "^1.2.0",
+    "request": "^2.88.0",
+    "rimraf": "^2.6.3"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.9"
+  }
+}

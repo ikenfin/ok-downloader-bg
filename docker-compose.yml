@@ -1,0 +1,30 @@
+version: "3.3"
+
+services:
+  redis:
+    container_name: ok-photos-redis
+    image: redis:5.0.3-alpine
+  bg:
+    image: ok-downloader-app/bg
+    volumes:
+      - /ok-downloader-bg
+    depends_on:
+      - redis
+    env_file:
+      - env
+    secrets:
+      - ok_secret_key
+      - ok_public_key
+      - ok_app_id
+    tmpfs:
+      - /run
+secrets:
+  ok_secret_key:
+    file: ../secrets/.ok_secret_key
+    # external: true
+  ok_public_key:
+    file: ../secrets/.ok_public_key
+    # external: true
+  ok_app_id:
+    file: ../secrets/.ok_app_id
+    # external: true
