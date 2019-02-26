@@ -1,7 +1,9 @@
 FROM node:8-alpine
-
-COPY . /ok-downloader-bg
 WORKDIR /ok-downloader-bg/
-RUN npm install
+# create local user
+COPY . .
 
-# CMD [ "npm", "start" ]
+RUN chown -R node:node /ok-downloader-bg
+
+USER node
+RUN npm install
