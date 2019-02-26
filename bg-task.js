@@ -22,7 +22,7 @@ require('./downloader')(config)
   .makeListener(networkKeys);
 
 
-cron.schedule('* */2 * * *', () => {
+cron.schedule('* * */2 * * *', () => {
   const redisClient = new Redis(config.redis.host, config.redis.port)
   console.log('scheduled task...')
   // get old tasks
