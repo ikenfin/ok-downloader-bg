@@ -5,7 +5,8 @@ services:
     container_name: ok-photos-redis
     image: redis:5.0.3-alpine
   bg:
-    image: ok-downloader-app/bg
+    build: git@github.com:ikenfin/ok-downloader-app.git
+    command: npm start
     volumes:
       - /ok-downloader-bg
     depends_on:

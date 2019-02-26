@@ -4,4 +4,4 @@ COPY . /ok-downloader-bg
 WORKDIR /ok-downloader-bg/
 RUN npm install
 
-CMD [ "npm", "start" ]
+# CMD [ "npm", "start" ]
