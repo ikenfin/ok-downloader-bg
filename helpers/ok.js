@@ -23,7 +23,7 @@ module.exports = function(keys) {
 
     getAuthUrl : function(redirect_uri) {
       let client_id = keys['applicationId'],
-          scope = ['VALUABLE_ACCESS','PHOTO_CONTENT','LONG_ACCESS_TOKEN'].join(';'),
+          scope = ['VALUABLE_ACCESS','PHOTO_CONTENT'].join(';'),
           response_type = 'code',
           layout = 'w';
 
@@ -190,28 +190,19 @@ module.exports = function(keys) {
     },
 
     refreshToken (refresh_token) {
-      return new Promise( ( resolve, reject ) => {
-        request.post(
-          {
-            url : 'https://api.ok.ru/oauth/token.do',
-            form : {
-              refresh_token,
-              client_id : keys['applicationId'],
-              client_secret : keys['applicationSecretKey'],
-              grant_type : 'refresh_token'
-            },
-            json : true
-          },
-          (err, _response, body) => {
-            if (err) {
-              reject(err)
-            }
-            else {
-              resolve(body.access_token);
-            }
+      return new Promise((resolve, reject) => {
+        // console.log(this.client, this.client.refreshToken)
+        this.client.refresh(refresh_token, (err, data) => {
+          if (err) {
+            console.error('refresh:', err)
+            reject(err)
           }
-        )
-      });
+          else {
+            console.log('new', data)
+            resolve(data)
+          }
+        })
+      })
     }
   }
 }
