@@ -30,7 +30,7 @@ module.exports = function (okApi) {
       })
     },
 
-    downloadAlbum: function (downloadPath, title, aid) {
+    downloadAlbum: function (downloadPath, _title, aid) {
       // let downloadPath = app.get('downloads-path') + '/' + title;
       mkdirp.sync(downloadPath, 0775);
 
@@ -50,6 +50,7 @@ module.exports = function (okApi) {
             (err) => {
               if (err) {
                 console.error('download err', err);
+                reject(err);
               }
 
               resolve();
