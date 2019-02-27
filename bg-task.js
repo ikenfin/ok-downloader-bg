@@ -24,9 +24,42 @@ const networkKeys = {
 require('./downloader')(config)
   .makeListener(networkKeys);
 
+// refresh tokens every 15 mins
+cron.schedule('0 */15 * * * *', () => {
+  const redisClient = new Redis(config.redis.host, config.redis.port)
+  const okApi = require('./helpers/ok')(networkKeys)
+
+  // console.log('scheduled access_tokens refresh')
+
+  const to = Date.now() - (15 * 60)
+  // refresh user tokens:
+  redisClient.zrange('users-refresh', 0, to).then(values => {
+    values.map(uid => {
+      redisClient.hgetall(`users:${uid}`)
+        .then((user) => {
+          const pipeline = redisClient.pipeline()
+
+          okApi.refreshToken(user.refresh_token)
+            .then(data => {
+              const newTime = Date.now() + (parseInt(data.expires_in) || 0)
+              pipeline.hset(`users:${uid}`, 'access_token', data.access_token)
+              pipeline.zrem('users-refresh', uid)
+              pipeline.zadd('users-refresh', newTime, uid)
+              return pipeline.exec()
+            })
+            .catch(err => {
+              console.error('users-refresh-err', err)
+              pipeline.zrem('users-refresh', uid)
+              return pipeline.exec()
+            })
+        })
+    })
+  })
+})
+
 cron.schedule('0 0 */2 * * *', () => {
   const redisClient = new Redis(config.redis.host, config.redis.port)
-  console.log('scheduled task...')
+  // console.log('scheduled task...')
   // get old tasks
   const to = Date.now() - SECONDS_IN_2_HOURS
 
@@ -36,6 +69,7 @@ cron.schedule('0 0 */2 * * *', () => {
         return cleaner(redisClient, downloadsPath, uid)
       }
       catch (e) {
+        console.error('cleaner error', e.message)
         return null
       }
     })
