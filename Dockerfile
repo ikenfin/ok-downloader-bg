@@ -4,6 +4,7 @@ WORKDIR /ok-downloader-bg/
 COPY . .
 
 RUN chown -R node:node /ok-downloader-bg
+RUN mkdir /ok-downloader-data/ && chown -R node:node /ok-downloader-data
 
 USER node
 RUN npm install

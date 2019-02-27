@@ -36,7 +36,7 @@ module.exports = function (config) {
         // console.log('albums:', albums);
         for (let i = 0; i < albums.length; i++) {
           // make user album directory
-          let albumDownloadPath = path.join(__dirname, 'downloads', job.data.uid, albums[i].title);
+          let albumDownloadPath = path.join(__dirname, '../ok-downloader-data/downloads', job.data.uid, albums[i].title);
 
           promises.push(downloader.downloadAlbum(albumDownloadPath, albums[i].title, albums[i].aid).then(() => {
             job.progress(job._progress + percentRatio);
