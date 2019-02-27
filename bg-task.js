@@ -6,11 +6,14 @@ const cleaner = require('./helpers/cleaner')
 
 const SECONDS_IN_2_HOURS = 7200
 
+const downloadsPath = path.join(__dirname, '../ok-downloader-data/');
+
 const config = {
   redis: {
     host: process.env.REDIS_HOST || 'redis',
     port: process.env.REDIS_PORT || 6379
-  }
+  },
+  downloadsPath
 }
 const networkKeys = {
   applicationSecretKey: secret.get('ok_secret_key'),
@@ -21,7 +24,6 @@ const networkKeys = {
 require('./downloader')(config)
   .makeListener(networkKeys);
 
-
 cron.schedule('0 0 */2 * * *', () => {
   const redisClient = new Redis(config.redis.host, config.redis.port)
   console.log('scheduled task...')
@@ -31,7 +33,7 @@ cron.schedule('0 0 */2 * * *', () => {
   redisClient.zrange('completed-jobs', 0, to).then(values => {
     const promises = values.map(uid => {
       try {
-        return cleaner(redisClient, path.join(__dirname, '../ok-downloader-data/downloads'), uid)
+        return cleaner(redisClient, downloadsPath, uid)
       }
       catch (e) {
         return null
