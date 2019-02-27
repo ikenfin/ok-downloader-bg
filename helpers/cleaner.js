@@ -9,9 +9,7 @@ module.exports = (redis, downloadsPath, uid) => {
       if (err) console.error('rmrf err', err)
 
       const pipeline = redis.pipeline()
-      pipeline.del(`users:${uid}`)
       pipeline.zrem('completed-jobs', uid)
-      pipeline.publish('user:deleted', uid)
 
       redis.keys(`zipped:${uid}:*`, (err, keys) => {
         keys.forEach(key => pipeline.del(key))
